@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DailyEcho</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<button onclick="refreshAll()" style="float:right;">
+    🔄 Refresh
+</button>
+
+<h1>📖 DailyEcho</h1>
+<p class="tagline">Your daily thoughts, your lasting echo</p>
+
+
+<textarea id="entry" placeholder="Write about your day..."></textarea>
+
+<select id="mood">
+    <option value="happy">😄 Happy</option>
+    <option value="sad">😢 Sad</option>
+    <option value="normal">🙂 Normal</option>
+    <option value="cheerful">🤩 Cheerful</option>
+</select>
+
+<button onclick="saveEntry()">Save</button>
+
+<hr>
+
+<input id="search" placeholder="Search memories" oninput="handleSearchInput()">
+<button onclick="searchEntry()">Search</button>
+
+<div id="searchResults"></div>
+
+<hr>
+
+<h2>📅 Mood Calendar</h2>
+
+<div class="calendar-controls">
+    <button onclick="prevMonth()">◀</button>
+    <span id="monthYear"></span>
+    <button onclick="nextMonth()">▶</button>
+</div>
+
+<div id="calendar" class="calendar-grid"></div>
+
+
+<hr>
+<hr>
+<h2>📖 Today's Entry</h2>
+
+<div id="todayContent" style="white-space: pre-wrap; background:#f5f5f5; padding:10px;">
+Loading...
+</div>
+
+<h3>Add more to today</h3>
+<textarea id="addMoreText" placeholder="Add more thoughts..."></textarea>
+<button onclick="addToToday()">Add</button>
+
+<hr>
+
+<h2>📊 Mood Graph</h2>
+<div class="card" id="graphSection">
+    <h2>📊 Mood Graph</h2>
+    <p class="subtext">Your mood trend over recent days</p>
+
+    <div class="graph-container">
+        <canvas id="moodChart" width="500" height="200"></canvas>
+    </div>
+
+    <div class="graph-actions">
+        <button onclick="drawGraph()">🔄 Refresh Graph</button>
+    </div>
+</div>
+
+<a href="/logout">Logout</a>
+<hr>
+<h3>📖 Selected Day</h3>
+<div id="dayViewer">
+    <p><strong>Date:</strong> <span id="viewDate">—</span></p>
+    <p><strong>Mood:</strong> <span id="viewMood">—</span></p>
+    <p><strong>Entry:</strong></p>
+    <div id="viewContent">Click a date to view entry.</div>
+</div>
+
+<h2>⏰ Daily Reminder</h2>
+<input type="time" id="reminderTime">
+<button onclick="setReminder()">Set Reminder</button>
+<p id="reminderStatus"></p>
+
+
+
+
+<script src="/static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 120px;
+    margin-bottom: 10px;
+}
+
+select, input, button {
+    margin: 5px 0;
+    padding: 6px;
+}
+
+#results p {
+    background: #f2f2f2;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+#calendar span {
+    font-size: 26px;
+    margin: 5px;
+    display: inline-block;
+}
+.calendar-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+
+.calendar-day {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 50px;
+    font-size: 20px;
+}
+
+.calendar-day.empty {
+    background: #f5f5f5;
+}
+.date-number {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.mood-emoji {
+    font-size: 22px;
+    margin-top: 5px;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.calendar-header {
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    background: #f0f0f0;
+}
+
+.calendar-day {
+    border: 1px solid #ccc;
+    min-height: 70px;
+    padding: 5px;
+    text-align: center;
+}
+
+.calendar-day.empty {
+    background: #fafafa;
+}
+
+.date-number {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.mood-emoji {
+    font-size: 22px;
+    margin-top: 10px;
+}
+.calendar-day.today {
+    border: 2px solid #4caf50;
+    background: #e8f5e9;
+}
+
+#dayViewer {
+    background: #f7f7f7;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+#viewContent {
+    white-space: pre-wrap;
+    margin-top: 6px;
+}
+.today-preview {
+    font-size: 11px;
+    color: #555;
+    margin-top: 5px;
+}
+.search-item {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+mark {
+    background: yellow;
+    font-weight: bold;
+}
+/* ===== Auth Pages ===== */
+
+.auth-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2f4f8;
+    font-family: Arial, sans-serif;
+}
+
+.auth-container {
+    background: #ffffff;
+    padding: 30px;
+    width: 320px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.auth-container h2 {
+    margin-bottom: 20px;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.auth-container button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #4caf50;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.auth-container button:hover {
+    background: #43a047;
+}
+
+.auth-link {
+    margin-top: 15px;
+    font-size: 14px;
+}
+.search-item.clickable {
+    cursor: pointer;
+}
+
+.search-item.clickable:hover {
+    background: #e3f2fd;
+}
+.card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin: 30px 0;
+}
+
+.subtext {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.graph-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+canvas {
+    background: #f7f9fc;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.graph-actions {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.graph-actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    background: #4cafef;
+    color: white;
+    cursor: pointer;
+}
+
+.graph-actions button:hover {
+    background: #2196f3;
+}
+.tagline {
+    color: #666;
+    font-size: 14px;
+    margin-top: -10px;
+}
