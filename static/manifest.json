@@ -1,0 +1,23 @@
+{
+  "name": "DailyEcho",
+  "short_name": "DailyEcho",
+  "description": "Daily mood journal and reflection app",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1827/1827379.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1827/1827379.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+

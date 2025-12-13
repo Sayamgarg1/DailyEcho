@@ -5,6 +5,7 @@
     <title>DailyEcho</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="manifest" href="/static/manifest.json">
 
     <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -107,5 +108,16 @@ Loading...
 
 
 <script src="/static/script.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("/static/sw.js")
+        .then(() => console.log("Service Worker Registered"))
+        .catch(err => console.error("SW error:", err));
+    });
+  }
+</script>
+
 </body>
 </html>
