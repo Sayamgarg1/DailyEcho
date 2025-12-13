@@ -228,6 +228,32 @@ def mood_data_api():
         {"date": r["entry_date"], "score": mood_score.get(r["mood"], 0)}
         for r in rows
     ])
+@app.route("/api/graph")
+def graph_api():
+    db = get_db()
+    rows = db.execute("""
+        SELECT entry_date, mood
+        FROM dailyecho
+        ORDER BY entry_date DESC
+        LIMIT 7
+    """).fetchall()
+
+    rows = rows[::-1]  # reverse to oldest → newest
+
+    mood_map = {
+        "sad": 1,
+        "neutral": 2,
+        "happy": 3
+    }
+
+    data = []
+    for r in rows:
+        data.append({
+            "date": r["entry_date"],
+            "value": mood_map.get(r["mood"].lower(), 2)
+        })
+
+    return jsonify(data)
 
 
 if __name__ == "__main__":

@@ -199,54 +199,64 @@ if (Notification.permission !== "granted") {
 }
 
 setInterval(checkReminder, 60000);
+let moodChart = null;
+
 function drawGraph() {
-    fetch("/api/mood-data")
-        .then(res => res.json())
-        .then(data => {
-            const canvas = document.getElementById("moodChart");
-            const ctx = canvas.getContext("2d");
+  fetch("/api/graph")
+    .then(res => res.json())
+    .then(data => {
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!data.length) {
+        return;
+      }
 
-            if (data.length === 0) {
-                ctx.font = "16px Arial";
-                ctx.fillText("No mood data yet", 170, 100);
-                return;
+      const labels = data.map(d => d.date);
+      const values = data.map(d => d.value);
+
+      const ctx = document.getElementById("moodChart").getContext("2d");
+
+      if (moodChart) {
+        moodChart.destroy();
+      }
+
+      moodChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Mood Level",
+            data: values,
+            borderColor: "#4caf50",
+            backgroundColor: "rgba(76, 175, 80, 0.2)",
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: values.map(v =>
+              v === 1 ? "#f44336" :
+              v === 2 ? "#ff9800" :
+                        "#4caf50"
+            ),
+            pointRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              min: 1,
+              max: 3,
+              ticks: {
+                stepSize: 1,
+                callback: value => {
+                  if (value === 1) return "Sad 😢";
+                  if (value === 2) return "Neutral 😐";
+                  if (value === 3) return "Happy 😊";
+                }
+              }
             }
-
-            if (data.length === 1) {
-                ctx.font = "14px Arial";
-                ctx.fillText("Add more days to see a trend", 150, 30);
-            }
-
-            // Axis
-            ctx.strokeStyle = "#ccc";
-            ctx.beginPath();
-            ctx.moveTo(40, 10);
-            ctx.lineTo(40, 180);
-            ctx.lineTo(480, 180);
-            ctx.stroke();
-
-            ctx.strokeStyle = "#4cafef";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-
-            data.forEach((p, i) => {
-                const x = 40 + i * 60;
-                const y = 180 - p.score * 30;
-
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-
-                // draw point
-                ctx.fillStyle = "#ff5722";
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            ctx.stroke();
-        });
+          }
+        }
+      });
+    });
 }
 
 
@@ -282,3 +292,5 @@ ctx.fillStyle = "#555";
 ctx.fillText("Happy", 5, 40);
 ctx.fillText("Neutral", 5, 90);
 ctx.fillText("Sad", 5, 140);
+
+drawGraph();
