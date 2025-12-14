@@ -21,11 +21,9 @@ def get_db():
     database_url = os.environ.get("DATABASE_URL")
 
     if database_url:
-        return psycopg2.connect(
-            database_url,
-            cursor_factory=RealDictCursor,
-            sslmode="require"
-        )
+        conn = psycopg2.connect(database_url, sslmode="require")
+        conn.autocommit = True
+        return conn
     else:
         import sqlite3
         return sqlite3.connect("dailyecho.db")
@@ -76,7 +74,8 @@ def register():
     if request.method == "POST":
         db = get_db()
         db.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
+            "INSERT INTO users (username, password) VALUES (%s, %s" \
+            ")",
             (
                 request.form["username"],
                 generate_password_hash(request.form["password"])
@@ -107,7 +106,7 @@ def add_entry():
     data = request.json
     db = get_db()
     db.execute(
-        "INSERT INTO dailyecho (user_id, entry_date, content, mood) VALUES (?, ?, ?, ?)",
+        "INSERT INTO dailyecho (user_id, entry_date, content, mood) VALUES (%s, %s,%s, %s)",
         (session["user_id"], date.today().isoformat(), data["content"], data["mood"])
     )
     db.commit()
@@ -175,7 +174,7 @@ def add_to_today():
         )
     else:
         db.execute(
-            "INSERT INTO dailyecho (user_id, entry_date, content, mood) VALUES (?, ?, ?, ?)",
+            "INSERT INTO dailyecho (user_id, entry_date, content, mood) VALUES (%s, %s,%s, %s)",
             (session["user_id"], today, new_text, "normal")
         )
 
