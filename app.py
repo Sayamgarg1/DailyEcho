@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, jsonify, redirect, session
-import sqlite3
+import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
 import os
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,9 +18,18 @@ app = Flask(
 app.secret_key = "supersecretkey"
 
 def get_db():
-    conn = sqlite3.connect(os.path.join(BASE_DIR, "dailyecho.db"))
-    conn.row_factory = sqlite3.Row
-    return conn
+    database_url = os.environ.get("DATABASE_URL")
+
+    if database_url:
+        return psycopg2.connect(
+            database_url,
+            cursor_factory=RealDictCursor,
+            sslmode="require"
+        )
+    else:
+        import sqlite3
+        return sqlite3.connect("dailyecho.db")
+
 
 with get_db() as db:
     
@@ -71,6 +83,7 @@ def register():
             )
         )
         db.commit()
+        db.close()
         return redirect("/")
 
     return render_template("register.html")
