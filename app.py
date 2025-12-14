@@ -78,18 +78,22 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        username = request.form["username"]
+        password = generate_password_hash(request.form["password"])
+
         db = get_db()
         cur = db.cursor()
 
-        cur.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
-            (
-                request.form["username"],
-                generate_password_hash(request.form["password"])
+        try:
+            cur.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, password)
             )
-        )
+            db.commit()
+        except sqlite3.IntegrityError:
+            db.close()
+            return "Username already exists. Try another."
 
-        db.commit()
         db.close()
         return redirect("/")
 
