@@ -33,17 +33,18 @@ def get_db():
         return conn, conn.cursor()
 
 
-with get_db() as db:
+conn, cur = get_db()
+
     
     
-    db.execute("""
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE,
             password TEXT
         )
     """)
-    db.execute("""
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS dailyecho (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
@@ -60,7 +61,7 @@ with get_db() as db:
 def login():
     if request.method == "POST":
         db = get_db()
-        user = db.execute(
+        user = cur.execute(
             "SELECT * FROM users WHERE username=?",
             (request.form["username"],)
         ).fetchone()
@@ -77,7 +78,7 @@ def login():
 def register():
     if request.method == "POST":
         db = get_db()
-        db.execute(
+        cur.execute(
             "INSERT INTO users (username, password) VALUES (%s, %s" \
             ")",
             (
@@ -85,7 +86,7 @@ def register():
                 generate_password_hash(request.form["password"])
             )
         )
-        db.commit()
+        conn.commit()
         db.close()
         return redirect("/")
 
@@ -109,11 +110,11 @@ def add_entry():
 
     data = request.json
     db = get_db()
-    db.execute(
+    cur.execute(
         "INSERT INTO dailyecho (user_id, entry_date, content, mood) VALUES (%s, %s,%s, %s)",
         (session["user_id"], date.today().isoformat(), data["content"], data["mood"])
     )
-    db.commit()
+    conn.commit()
     return jsonify({"status": "saved"})
 
 @app.route("/api/entry-by-date")
@@ -126,7 +127,7 @@ def entry_by_date():
         return jsonify(None)
 
     db = get_db()
-    row = db.execute(
+    row = cur.execute(
         "SELECT entry_date, content, mood FROM dailyecho WHERE user_id=? AND entry_date=?",
         (session["user_id"], date_str)
     ).fetchone()
@@ -147,7 +148,7 @@ def calendar_api():
         return jsonify({})   # ALWAYS JSON
 
     db = get_db()
-    rows = db.execute(
+    rows = cur.execute(
         "SELECT entry_date, mood FROM dailyecho WHERE user_id=?",
         (session["user_id"],)
     ).fetchall()
@@ -165,24 +166,24 @@ def add_to_today():
     today = date.today().isoformat()
     db = get_db()
 
-    row = db.execute(
+    row = cur.execute(
         "SELECT content FROM dailyecho WHERE user_id=? AND entry_date=?",
         (session["user_id"], today)
     ).fetchone()
 
     if row:
         updated = row["content"] + "\n\n" + new_text
-        db.execute(
+        cur.execute(
             "UPDATE dailyecho SET content=? WHERE user_id=? AND entry_date=?",
             (updated, session["user_id"], today)
         )
     else:
-        db.execute(
+        cur.execute(
             "INSERT INTO dailyecho (user_id, entry_date, content, mood) VALUES (%s, %s,%s, %s)",
             (session["user_id"], today, new_text, "normal")
         )
 
-    db.commit()
+    conn.commit()
     return jsonify({"status": "added"})
 @app.route("/api/today-entry")
 def today_entry():
@@ -191,7 +192,7 @@ def today_entry():
 
     today = date.today().isoformat()
     db = get_db()
-    row = db.execute(
+    row = cur.execute(
         "SELECT content FROM dailyecho WHERE user_id=? AND entry_date=?",
         (session["user_id"], today)
     ).fetchone()
@@ -208,7 +209,7 @@ def search_api():
         return jsonify([])
 
     db = get_db()
-    rows = db.execute(
+    rows = cur.execute(
         """
         SELECT entry_date, content
         FROM dailyecho
@@ -233,7 +234,7 @@ def mood_data_api():
         return jsonify([])
 
     db = get_db()
-    rows = db.execute(
+    rows = cur.execute(
         "SELECT entry_date, mood FROM dailyecho WHERE user_id=?",
         (session["user_id"],)
     ).fetchall()
@@ -247,7 +248,7 @@ def mood_data_api():
 @app.route("/api/graph")
 def graph_api():
     db = get_db()
-    rows = db.execute("""
+    rows = cur.execute("""
         SELECT entry_date, mood
         FROM dailyecho
         ORDER BY entry_date DESC
