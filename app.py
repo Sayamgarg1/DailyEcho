@@ -21,12 +21,16 @@ def get_db():
     database_url = os.environ.get("DATABASE_URL")
 
     if database_url:
-        conn = psycopg2.connect(database_url, sslmode="require")
-        conn.autocommit = True
-        return conn
+        conn = psycopg2.connect(
+            database_url,
+            sslmode="require"
+        )
+        return conn, conn.cursor()
     else:
         import sqlite3
-        return sqlite3.connect("dailyecho.db")
+        conn = sqlite3.connect("dailyecho.db")
+        conn.row_factory = sqlite3.Row
+        return conn, conn.cursor()
 
 
 with get_db() as db:
